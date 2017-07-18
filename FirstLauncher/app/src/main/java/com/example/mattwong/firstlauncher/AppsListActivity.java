@@ -30,32 +30,36 @@ public class AppsListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apps_list_activiy);
+
+        loadApps();
+        loadListview();
+        addClickListener();
     }
 
-    private void loadApps(){
+    private void loadApps() {
         manager = getPackageManager();
-        apps= new ArrayList<>();
+        apps = new ArrayList<>();
 
         Intent i = new Intent(Intent.ACTION_MAIN, null);
         i.addCategory((Intent.CATEGORY_LAUNCHER));
 
-        List<ResolveInfo> avaliableActivities = manager.queryIntentActivities(i,0);
-        for(ResolveInfo ri : avaliableActivities){
+        List<ResolveInfo> avaliableActivities = manager.queryIntentActivities(i, 0);
+        for (ResolveInfo ri : avaliableActivities) {
             App app = new App();
-            app.label = ri. activityInfo.packageName; //get app package
-            app.name=ri.loadLabel(manager);
-            app.icon=ri.loadIcon(manager);
+            app.label = ri.activityInfo.packageName; //get app package
+            app.name = ri.loadLabel(manager);
+            app.icon = ri.loadIcon(manager);
             apps.add(app);
         }
     }
 
-    private void loadListview(){
-        list = (ListView) findViewById(R.id.List);
+    private void loadListview() {
+        list = (ListView) findViewById(R.id.list);
 
-        ArrayAdapter<App> adapter = new ArrayAdapter<App>(this, R.layout.app, apps){
+        ArrayAdapter<App> adapter = new ArrayAdapter<App>(this, R.layout.app, apps) {
             @NonNull
             @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 convertView = getLayoutInflater().inflate(R.layout.app, null);
                 ImageView appIcon = (ImageView) convertView.findViewById((R.id.icon));
                 appIcon.setImageDrawable(apps.get(position).icon);
@@ -63,18 +67,19 @@ public class AppsListActivity extends AppCompatActivity {
                 TextView appName = (TextView) convertView.findViewById((R.id.name));
                 appName.setText(apps.get(position).name);
 
-                return covertView;
+                return convertView;
             }
         };
         list.setAdapter(adapter);
     }
 
-    private void addClickListener(){
-        list.setOnClickListener(new AdapterView.OnItemClickListener(){
+    private void addClickListener() {
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                Intent i = manager.getLaunchIntentForPackage(apps.get(position).label.toString()))
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = manager.getLaunchIntentForPackage(apps.get(position).label.toString());
+                startActivity(i);
             }
-        }
+        });
     }
 }
