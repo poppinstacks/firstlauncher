@@ -20,10 +20,6 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AppsListActivity"
-            android:theme="@style/AppTheme.Wallpaper">
-        </activity>
     </application>
 
 </manifest>
